@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "github.com/Gunleifo/Assignmnet-4/proto";
+
+package proto;
+
+service TokenRing {
+    rpc SendToken (Token) returns (Reply);
+}
+
+message Token {
+    int32 processId = 1;
+    int32 tokenId = 2;
+}
+
+message Reply {
+    string message = 1;
+}
