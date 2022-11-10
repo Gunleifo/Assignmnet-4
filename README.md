@@ -1,7 +1,3 @@
-MANDATORY HAND-IN 4:
-
-    Our group has made a solution based on the token ring algorithm
-
 HOW TO RUN THE PROGRAM:
 
     Make sure to have port 5000, 5001 and 5002 free
