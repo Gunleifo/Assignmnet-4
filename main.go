@@ -22,7 +22,7 @@ type peer struct {
 }
 
 func init() {
-	// Generates a new seed on every program execution to get random times for when a process wants to enter the critical section
+	// Generates a new seed on every program execution to get random number for when a process wants to enter the critical section
 	rand.Seed(time.Now().UnixNano())
 }
 
@@ -78,6 +78,7 @@ func main() {
 	}
 
 	for {
+		//Token ring starts with the process having port 5000
 		if p.id == 5000 {
 			p.GetToken()
 		}
@@ -99,11 +100,14 @@ func (p *peer) SendToken(ctx context.Context, req *ring.Token) (*ring.Reply, err
 
 func (p *peer) GetToken() {
 
+	// Generate random number
 	n := rand.Intn(6)
 
+	//Random chance of entering the critical section every time the process gets the token
 	if n == 3 {
 		log.Print("Process entered critical section")
 
+		//Process time in critical section
 		time.Sleep(time.Second * 5)
 
 		log.Print("Process exited critical section")
@@ -111,12 +115,15 @@ func (p *peer) GetToken() {
 		time.Sleep(time.Second * 3)
 	}
 
+	//Token to be sent to next process in token ring
 	token := &ring.Token{ProcessId: p.id, TokenId: 1}
 
+	//If process id is 5000 or 5001, send token to the next process by adding one to its own id
 	if p.id == 5000 || p.id == 5001 {
 		log.Printf("Process sends token to process with port: %v", p.id+1)
 		p.clients[p.id+1].SendToken(p.ctx, token)
 	} else {
+		//If process id is 5002, send token to the first process in the token ring
 		log.Printf("Process sends token to process with port: %v", 5000)
 		p.clients[p.id-2].SendToken(p.ctx, token)
 	}
